@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.Title }} - MovieFlix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e63946;
+            --primary-hover: #ff4d5a;
+            --primary-glow: rgba(230, 57, 70, 0.25);
+            --accent: #f4a261;
+            --background: #0b0b14;
+            --surface: #14142b;
+            --surface-elevated: #1c1c3a;
+            --surface-glass: rgba(28, 28, 58, 0.8);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0bc;
+            --text-muted: #6b6b85;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 32px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.45);
+            --shadow-glow: 0 0 30px var(--primary-glow);
+            --spacing-xs: 6px;
+            --spacing-sm: 12px;
+            --spacing-md: 20px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.2s var(--ease-out);
+            --transition-smooth: 0.4s var(--ease-out);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--background); color: var(--text-primary); margin: 0; padding: 0; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+        h1,h2,h3 { font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+        
+        /* HEADER */
+        .header { background: var(--surface-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border-subtle); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .header-content { max-width: 1440px; margin: 0 auto; padding: 10px var(--spacing-lg); display: flex; align-items: center; gap: var(--spacing-md); }
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; letter-spacing: -0.03em; flex-shrink: 0; }
+        .nav-links { display: flex; gap: var(--spacing-md); margin-right: auto; }
+        .nav-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color var(--transition-fast); position: relative; padding: 4px 0; }
+        .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--primary); transition:width var(--transition-smooth); border-radius:2px; }
+        .nav-link:hover { color: var(--text-primary); }
+        .nav-link:hover::after { width: 100%; }
+        .search-bar { display: flex; align-items: center; gap: 8px; }
+        .search-bar input { padding: 8px 16px; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface); color: var(--text-primary); font-size: 0.9rem; width: 220px; transition: var(--transition-fast); outline: none; }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: var(--surface-elevated); width: 280px; }
+        .search-bar button { padding: 8px 12px; background: var(--primary); color: var(--text-primary); border: none; border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; }
+        .search-bar button:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .train-link { padding: 8px 18px; background: linear-gradient(135deg, var(--primary), #d62839); color: var(--text-primary); text-decoration: none; border-radius: var(--radius-lg); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.04em; transition: var(--transition-fast); white-space: nowrap; border: none; }
+        .train-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+
+        /* MAIN CONTENT */
+        .main-content { margin-top: 80px; padding: var(--spacing-lg) var(--spacing-lg); max-width: 1440px; margin-left: auto; margin-right: auto; }
+
+        .back-btn { display: inline-flex; align-items: center; padding: 10px 20px; background: var(--surface-elevated); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); text-decoration: none; margin-bottom: var(--spacing-lg); font-weight: 500; font-size: 0.9rem; transition: var(--transition-fast); }
+        .back-btn:hover { background: var(--surface); transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--text-muted); }
+        .back-btn svg { margin-right: 8px; }
+
+        .movie-details { display: flex; gap: var(--spacing-xl); flex-wrap: wrap; }
+        
+        .poster-container { flex: 0 0 320px; }
+        .movie-poster { width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-lg), 0 0 40px rgba(0,0,0,0.5); overflow: hidden; background: var(--surface); aspect-ratio: 2/3; position: relative; }
+        .movie-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .info-container { flex: 1; min-width: 300px; }
+        .movie-title { font-size: 3rem; margin: 0 0 var(--spacing-xs) 0; color: var(--text-primary); font-weight: 800; line-height: 1.1; }
+        
+        .movie-meta { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); font-size: 1rem; color: var(--text-secondary); }
+        .rating-badge { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-weight: 700; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; box-shadow: var(--shadow-sm); }
+        
+        .movie-plot { font-size: 1.1rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: var(--spacing-lg); background: var(--surface-elevated); padding: var(--spacing-md); border-radius: var(--radius-md); border-left: 4px solid var(--primary); }
+
+        .info-grid { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing-sm) var(--spacing-md); margin-bottom: var(--spacing-lg); font-size: 0.95rem; }
+        .info-label { color: var(--text-muted); font-weight: 500; }
+        .info-value { color: var(--text-primary); font-weight: 600; }
+
+        .streaming-providers { margin-bottom: var(--spacing-lg); }
+        .streaming-title { font-size: 1.25rem; margin-bottom: var(--spacing-sm); color: var(--text-primary); }
+        .streaming-list { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }
+        .provider-badge { background: var(--surface-elevated); padding: 8px 16px; border-radius: var(--radius-xl); font-weight: 600; font-size: 0.9rem; border: 1px solid var(--border-subtle); transition: var(--transition-fast); }
+        .provider-badge:hover { border-color: var(--primary); background: var(--surface); box-shadow: var(--shadow-glow); }
+
+        .interaction-card { background: var(--surface-elevated); padding: var(--spacing-md); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: var(--spacing-md); margin-top: var(--spacing-xl); }
+        .interaction-title { font-size: 1.2rem; color: var(--text-primary); margin: 0; }
+        .rating-form { display: flex; align-items: center; gap: var(--spacing-sm); }
+        .rating-form select { background: var(--surface); color: var(--text-primary); border: 1px solid var(--border-subtle); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 1rem; outline: none; }
+        .rating-form button { background: var(--primary); color: #fff; border: none; padding: 8px 20px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: var(--transition-fast); }
+        .rating-form button:hover { background: var(--primary-hover); box-shadow: var(--shadow-glow); }
+
+        .backdrops { margin-top: var(--spacing-xl); }
+        .backdrops-title { font-size: 1.75rem; margin-bottom: var(--spacing-md); position: relative; padding-bottom: 8px; }
+        .backdrops-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px; }
+        .backdrop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--spacing-md); }
+        .backdrop-img { width: 100%; border-radius: var(--radius-md); aspect-ratio: 16/9; object-fit: cover; opacity: 0.8; transition: var(--transition-smooth); cursor: pointer; }
+        .backdrop-img:hover { opacity: 1; transform: scale(1.02); box-shadow: var(--shadow-md); z-index: 10; position: relative; }
+
+        @media (max-width: 768px) {
+            .header-content { padding: 8px var(--spacing-sm); gap: var(--spacing-sm); flex-wrap: wrap; }
+            .nav-links { gap: var(--spacing-sm); }
+            .search-bar input { width: 140px; }
+            .search-bar input:focus { width: 180px; }
+            .train-link { padding: 6px 14px; font-size: 0.8rem; }
+            
+            .movie-details { flex-direction: column; gap: var(--spacing-md); }
+            .poster-container { flex: 0 0 auto; max-width: 250px; margin: 0 auto; }
+            .movie-title { font-size: 2rem; text-align: center; }
+            .movie-meta { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ url_for('home') }}" class="logo">MovieFlix</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('swipe') }}" class="nav-link">Discover</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" name="q" placeholder="Search movies...">
+                <button onclick="searchMovies()" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+            <a href="{{ url_for('swipe') }}" class="train-link">🎬 Train Recommendations</a>
+            <a href="{{ url_for('logout') }}" class="nav-link" style="margin-left: 10px;">Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <a href="{{ url_for('home') }}" class="back-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+            Back to Recommendations
+        </a>
+
+        <div class="movie-details">
+            <div class="poster-container">
+                <div class="movie-poster">
+                    {% if movie.Poster and movie.Poster != 'N/A' %}
+                        <img src="{{ movie.Poster }}" alt="{{ movie.Title }} poster" onerror="this.src='https://via.placeholder.com/342x513?text=No+Poster'">
+                    {% else %}
+                        <img src="https://via.placeholder.com/342x513?text=No+Poster" alt="No Poster">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-container">
+                <h1 class="movie-title">{{ movie.Title }}</h1>
+
+                <div class="movie-meta">
+                    {% if movie.imdbRating and movie.imdbRating != "N/A" %}
+                    <span class="rating-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 .587l3.668 7.431 8.332 1.209-6.001 5.853 1.416 8.262L12 18.897l-7.415 3.889 1.416-8.262-6.001-5.853 8.332-1.209L12 .587z"></path>
+                        </svg>
+                        {{ movie.imdbRating }}
+                    </span>
+                    {% endif %}
+                    {% if movie.Year and movie.Year != "N/A" %}<span>{{ movie.Year }}</span> •{% endif %}
+                    {% if movie.Runtime and movie.Runtime != "N/A" %}<span>{{ movie.Runtime }}</span> •{% endif %}
+                    {% if movie.Rated and movie.Rated != "N/A" %}<span>{{ movie.Rated }}</span>{% endif %}
+                </div>
+
+                {% if movie.Plot and movie.Plot != "N/A" %}
+                <div class="movie-plot">
+                    {{ movie.Plot }}
+                </div>
+                {% endif %}
+
+                <div class="info-grid">
+                    {% if movie.Genre and movie.Genre != "N/A" %}
+                    <div class="info-label">Genre</div>
+                    <div class="info-value">{{ movie.Genre }}</div>
+                    {% endif %}
+
+                    {% if movie.Director and movie.Director != "N/A" %}
+                    <div class="info-label">Director</div>
+                    <div class="info-value">{{ movie.Director }}</div>
+                    {% endif %}
+
+                    {% if movie.Actors and movie.Actors != "N/A" %}
+                    <div class="info-label">Cast</div>
+                    <div class="info-value">{{ movie.Actors }}</div>
+                    {% endif %}
+
+                    {% if movie.Language and movie.Language != "N/A" %}
+                    <div class="info-label">Language</div>
+                    <div class="info-value">{{ movie.Language }}</div>
+                    {% endif %}
+                </div>
+
+                {% if streaming and streaming|length > 0 %}
+                <div class="streaming-providers">
+                    <h3 class="streaming-title">Where to Watch</h3>
+                    <div class="streaming-list">
+                        {% for provider in streaming %}
+                        <div class="provider-badge">{{ provider }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="interaction-card">
+                    <h3 class="interaction-title">Watched this? Let us know.</h3>
+                    <form action="{{ url_for('rate_movie') }}" method="POST" class="rating-form">
+                        <input type="hidden" name="imdb_id" value="{{ movie.imdb_id }}">
+                        <select name="rating" id="rating">
+                            <option value="5">⭐⭐⭐⭐⭐ Masterpiece</option>
+                            <option value="4">⭐⭐⭐⭐ Great</option>
+                            <option value="3">⭐⭐⭐ Good</option>
+                            <option value="2">⭐⭐ Fair</option>
+                            <option value="1">⭐ Poor</option>
+                        </select>
+                        <button type="submit">Submit Rating</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% if movie.additional_backdrops %}
+        <div class="backdrops">
+            <h2 class="backdrops-title">Scenes & Backdrops</h2>
+            <div class="backdrop-grid">
+                {% for backdrop in movie.additional_backdrops %}
+                    {% if backdrop %}
+                        <img src="{{ backdrop }}" alt="Movie backdrop" class="backdrop-img" onerror="this.style.display='none'">
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function searchMovies() {
+            const q = document.getElementById('searchInput').value.trim();
+            if (q) window.location.href = "{{ url_for('search') }}?q=" + encodeURIComponent(q);
+            return false;
+        }
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchMovies(); });
+    </script>
+</body>
+</html>

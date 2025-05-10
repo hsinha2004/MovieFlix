@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results for "{{ keyword }}" - MovieFlix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e63946;
+            --primary-hover: #ff4d5a;
+            --primary-glow: rgba(230, 57, 70, 0.25);
+            --accent: #f4a261;
+            --background: #0b0b14;
+            --surface: #14142b;
+            --surface-elevated: #1c1c3a;
+            --surface-glass: rgba(28, 28, 58, 0.8);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0bc;
+            --text-muted: #6b6b85;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 32px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.45);
+            --shadow-glow: 0 0 30px var(--primary-glow);
+            --spacing-xs: 6px;
+            --spacing-sm: 12px;
+            --spacing-md: 20px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.2s var(--ease-out);
+            --transition-smooth: 0.4s var(--ease-out);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--background); color: var(--text-primary); margin: 0; padding: 0; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+        h1,h2,h3 { font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+        
+        /* HEADER */
+        .header { background: var(--surface-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border-subtle); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .header-content { max-width: 1440px; margin: 0 auto; padding: 10px var(--spacing-lg); display: flex; align-items: center; gap: var(--spacing-md); }
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; letter-spacing: -0.03em; flex-shrink: 0; }
+        .nav-links { display: flex; gap: var(--spacing-md); margin-right: auto; }
+        .nav-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color var(--transition-fast); position: relative; padding: 4px 0; }
+        .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--primary); transition:width var(--transition-smooth); border-radius:2px; }
+        .nav-link:hover { color: var(--text-primary); }
+        .nav-link:hover::after { width: 100%; }
+        .search-bar { display: flex; align-items: center; gap: 8px; }
+        .search-bar input { padding: 8px 16px; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface); color: var(--text-primary); font-size: 0.9rem; width: 220px; transition: var(--transition-fast); outline: none; }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: var(--surface-elevated); width: 280px; }
+        .search-bar button { padding: 8px 12px; background: var(--primary); color: var(--text-primary); border: none; border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; }
+        .search-bar button:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .train-link { padding: 8px 18px; background: linear-gradient(135deg, var(--primary), #d62839); color: var(--text-primary); text-decoration: none; border-radius: var(--radius-lg); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.04em; transition: var(--transition-fast); white-space: nowrap; border: none; }
+        .train-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+
+        /* MAIN */
+        .main-content { margin-top: 80px; padding: var(--spacing-lg) var(--spacing-lg); max-width: 1440px; margin-left: auto; margin-right: auto; }
+
+        .back-btn { display: inline-flex; align-items: center; padding: 10px 20px; background: var(--surface-elevated); color: var(--text-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); text-decoration: none; margin-bottom: var(--spacing-lg); font-weight: 500; font-size: 0.9rem; transition: var(--transition-fast); }
+        .back-btn:hover { background: var(--surface); transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--text-muted); }
+        .back-btn svg { margin-right: 8px; }
+
+        .section-title { font-size: 1.75rem; margin: 0 0 var(--spacing-lg) 0; color: var(--text-primary); font-weight: 700; position: relative; padding-bottom: 8px; }
+        .section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px; }
+
+        /* GRID */
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--spacing-lg); padding: var(--spacing-sm) 0; }
+
+        .movie-card { position: relative; border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 2/3; background: var(--surface); cursor: pointer; transition: transform var(--transition-smooth), box-shadow var(--transition-smooth); }
+        .movie-card:hover { transform: translateY(-8px) scale(1.04); box-shadow: var(--shadow-lg), 0 0 40px rgba(0,0,0,0.4); z-index: 10; }
+        .movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.4s ease; }
+        .movie-card img.loaded { opacity: 1; }
+        .movie-card:hover img { transform: scale(1.06); transition: transform 0.6s var(--ease-out); }
+
+        .movie-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 55%, transparent 100%); padding: var(--spacing-md) var(--spacing-sm) var(--spacing-sm); transform: translateY(55%); opacity: 0; transition: transform var(--transition-smooth), opacity 0.3s ease; z-index: 2; }
+        .movie-card:hover .movie-info { transform: translateY(0); opacity: 1; }
+        .movie-info h3 { margin: 0 0 3px 0; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+        .movie-info p { margin: 0; font-size: 0.85rem; color: var(--text-secondary); }
+        .more-info-btn { background: var(--primary); color: var(--text-primary); border: none; padding: 6px 14px; border-radius: var(--radius-sm); cursor: pointer; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: var(--transition-fast); display: inline-block; margin-top: 10px; }
+        .more-info-btn:hover { background: var(--primary-hover); box-shadow: var(--shadow-glow); }
+
+        .placeholder { position: absolute; width: 100%; height: 100%; background: var(--surface); display: flex; align-items: center; justify-content: center; z-index: 1; }
+        .spinner { width: 24px; height: 24px; border: 2px solid var(--primary); border-radius: 50%; border-top-color: transparent; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: var(--spacing-xl); color: var(--text-muted); font-size: 1.1rem; }
+
+        @media (max-width: 768px) {
+            .header-content { padding: 8px var(--spacing-sm); gap: var(--spacing-sm); flex-wrap: wrap; }
+            .nav-links { gap: var(--spacing-sm); }
+            .search-bar input { width: 140px; }
+            .search-bar input:focus { width: 180px; }
+            .train-link { padding: 6px 14px; font-size: 0.8rem; }
+            .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--spacing-md); }
+            .movie-info { transform: translateY(0); opacity: 1; padding: 8px; }
+            .movie-card:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ url_for('home') }}" class="logo">MovieFlix</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('swipe') }}" class="nav-link">Discover</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" name="q" placeholder="Search movies..." value="{{ keyword }}">
+                <button onclick="searchMovies()" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+            <a href="{{ url_for('swipe') }}" class="train-link">🎬 Train Recommendations</a>
+            <a href="{{ url_for('logout') }}" class="nav-link" style="margin-left: 10px;">Logout</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <a href="{{ url_for('home') }}" class="back-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+            Back to Recommendations
+        </a>
+        
+        <h2 class="section-title">Search Results for "{{ keyword }}"</h2>
+        
+        {% if movies %}
+            <div class="movie-grid">
+                {% for movie in movies %}
+                <div class="movie-card">
+                    <div class="placeholder"><div class="spinner"></div></div>
+                    <img data-src="{{ movie.poster }}" alt="{{ movie.title }} Poster" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+                    <div class="movie-info">
+                        <h3>{{ movie.title }}</h3>
+                        <p>{{ movie.year }} • ⭐ {{ movie.rating }}</p>
+                        <a href="{{ url_for('movie_details', imdb_id=movie.imdb_id) }}" class="more-info-btn">More Info</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">No movies found matching your search. Try different keywords.</div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.getAttribute('data-src');
+                        if (src) {
+                            const temp = new Image();
+                            temp.onload = function() {
+                                img.src = src;
+                                img.classList.add('loaded');
+                                const ph = img.closest('.movie-card').querySelector('.placeholder');
+                                if (ph) ph.style.display = 'none';
+                            };
+                            temp.onerror = function() {
+                                img.src = 'https://via.placeholder.com/300x450?text=No+Poster';
+                                img.classList.add('loaded');
+                                const ph = img.closest('.movie-card').querySelector('.placeholder');
+                                if (ph) ph.style.display = 'none';
+                            };
+                            temp.src = src;
+                            obs.unobserve(img);
+                        }
+                    }
+                });
+            }, { rootMargin: '300px 0px', threshold: 0.01 });
+            document.querySelectorAll('.movie-card img[data-src]').forEach(img => observer.observe(img));
+        });
+
+        function searchMovies() {
+            const q = document.getElementById('searchInput').value.trim();
+            if (q) window.location.href = "{{ url_for('search') }}?q=" + encodeURIComponent(q);
+            return false;
+        }
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchMovies(); });
+    </script>
+</body>
+</html>

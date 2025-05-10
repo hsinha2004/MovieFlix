@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Error{% endblock %}
+{% block content %}
+    <div style="text-align:center; padding: 80px 20px;">
+        <div style="font-size: 4rem; margin-bottom: 16px;">😥</div>
+        <h2 style="font-size: 1.75rem; margin-bottom: 12px;">Something went wrong</h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 500px; margin: 0 auto 32px;">{{ message }}</p>
+        <a href="{{ url_for('home') }}" style="display:inline-block; padding: 12px 28px; background: linear-gradient(135deg, var(--primary), #d62839); color: var(--text-primary); text-decoration: none; border-radius: var(--radius-xl); font-weight: 700; font-size: 0.95rem; transition: var(--transition-fast);">
+            ← Back to Home
+        </a>
+    </div>
+{% endblock %}

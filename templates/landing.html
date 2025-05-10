@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieFlix — Unlimited Movies, Personalized</title>
+    <meta name="description" content="Discover personalized movie recommendations powered by AI. Train your taste, find your next favorite film.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e63946;
+            --primary-hover: #ff4d5a;
+            --primary-glow: rgba(230, 57, 70, 0.25);
+            --accent: #f4a261;
+            --background: #0b0b14;
+            --surface: #14142b;
+            --surface-elevated: #1c1c3a;
+            --surface-glass: rgba(28, 28, 58, 0.8);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0bc;
+            --text-muted: #6b6b85;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 32px;
+            --shadow-glow: 0 0 30px var(--primary-glow);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.2s var(--ease-out);
+            --transition-smooth: 0.4s var(--ease-out);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+            position: relative;
+            overflow: hidden;
+        }
+        h1,h2,h3 { font-family: 'Poppins', sans-serif; font-weight: 700; margin: 0; }
+
+        /* Background poster collage */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: url('/static/landing_bg.png') no-repeat center center/cover;
+            filter: brightness(0.35) saturate(0.6);
+        }
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(to top, var(--background) 0%, rgba(11,11,20,0.6) 40%, rgba(11,11,20,0.3) 70%, var(--background) 100%);
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.03em;
+        }
+        .btn-signin {
+            padding: 8px 20px;
+            background: var(--primary);
+            color: var(--text-primary);
+            border: none;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+        }
+        .btn-signin:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            animation: fadeIn 1s ease;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            max-width: 800px;
+            margin-bottom: 1rem;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 36px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #d62839);
+            color: var(--text-primary);
+            border: none;
+            border-radius: var(--radius-xl);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            letter-spacing: 0.02em;
+        }
+        .hero-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: var(--shadow-glow), 0 12px 40px rgba(230, 57, 70, 0.3);
+        }
+        .hero-btn svg {
+            transition: transform var(--transition-fast);
+        }
+        .hero-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Features */
+        .features {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            padding: 40px 20px 60px;
+            flex-wrap: wrap;
+        }
+        .feature {
+            text-align: center;
+            max-width: 200px;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .feature h3 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .feature p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .header { padding: 16px 20px; }
+            .logo { font-size: 1.4rem; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .hero-btn { padding: 14px 28px; font-size: 1rem; }
+            .features { gap: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-layer"></div>
+    <div class="bg-gradient"></div>
+
+    <div class="header">
+        <a href="/" class="logo">MovieFlix</a>
+        <a href="/login" class="btn-signin">Sign In</a>
+    </div>
+
+    <div class="hero">
+        <h1>Unlimited movies, <span>personalized</span> just for you.</h1>
+        <p>Train our AI to learn your taste. Get smarter recommendations with every swipe.</p>
+        <a href="/register" class="hero-btn">
+            Get Started
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <div class="feature-icon">🧠</div>
+            <h3>AI-Powered</h3>
+            <p>Q-Learning adapts to your unique taste</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🎬</div>
+            <h3>Swipe to Train</h3>
+            <p>Like or pass — your AI gets smarter</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">👤</div>
+            <h3>Per-User Profiles</h3>
+            <p>Separate recommendations for everyone</p>
+        </div>
+    </div>
+</body>
+</html>

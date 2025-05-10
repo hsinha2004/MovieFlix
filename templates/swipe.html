@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover — MovieFlix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e63946;
+            --primary-hover: #ff4d5a;
+            --primary-glow: rgba(230, 57, 70, 0.25);
+            --accent: #f4a261;
+            --background: #0b0b14;
+            --surface: #14142b;
+            --surface-elevated: #1c1c3a;
+            --surface-glass: rgba(28, 28, 58, 0.8);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0bc;
+            --text-muted: #6b6b85;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 32px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.45);
+            --shadow-glow: 0 0 30px var(--primary-glow);
+            --spacing-xs: 6px;
+            --spacing-sm: 12px;
+            --spacing-md: 20px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.2s var(--ease-out);
+            --transition-smooth: 0.4s var(--ease-out);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        /* === SHARED HEADER (same as recommendations.html) === */
+        .header { background: var(--surface-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border-subtle); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .header-content { max-width: 1440px; margin: 0 auto; padding: 10px var(--spacing-lg); display: flex; align-items: center; gap: var(--spacing-md); }
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; letter-spacing: -0.03em; flex-shrink: 0; }
+        .nav-links { display: flex; gap: var(--spacing-md); margin-right: auto; }
+        .nav-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color var(--transition-fast); position: relative; padding: 4px 0; }
+        .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:var(--primary); transition:width var(--transition-smooth); border-radius:2px; }
+        .nav-link:hover { color: var(--text-primary); }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link.active { color: var(--text-primary); }
+        .nav-link.active::after { width: 100%; }
+        .search-bar { display: flex; align-items: center; gap: 8px; }
+        .search-bar input { padding: 8px 16px; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface); color: var(--text-primary); font-size: 0.9rem; width: 220px; transition: var(--transition-fast); outline: none; }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: var(--surface-elevated); width: 280px; }
+        .search-bar button { padding: 8px 12px; background: var(--primary); color: var(--text-primary); border: none; border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; }
+        .search-bar button:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+        .train-link { padding: 8px 18px; background: linear-gradient(135deg, var(--primary), #d62839); color: var(--text-primary); text-decoration: none; border-radius: var(--radius-lg); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.04em; transition: var(--transition-fast); white-space: nowrap; border: none; }
+        .train-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+
+        /* === SWIPE CONTENT === */
+        .swipe-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 60px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, var(--surface) 0%, var(--background) 100%);
+        }
+
+        .card-container {
+            position: relative;
+            width: 320px;
+            height: 480px;
+            margin-bottom: var(--spacing-lg);
+            perspective: 1000px;
+        }
+
+        .movie-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: var(--transition-smooth);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            cursor: grab;
+            background-color: var(--surface);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        .movie-card.swiped-right { animation: swipeRight 0.5s forwards; }
+        .movie-card.swiped-left { animation: swipeLeft 0.5s forwards; }
+
+        @keyframes swipeRight { to { transform: translateX(150%) rotate(45deg); opacity: 0; } }
+        @keyframes swipeLeft { to { transform: translateX(-150%) rotate(-45deg); opacity: 0; } }
+
+        .poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+        }
+
+        .info {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+            padding: var(--spacing-md);
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            text-align: left;
+        }
+        .info h3 { margin: 0 0 var(--spacing-xs) 0; font-size: 1.25rem; color: var(--text-primary); }
+        .info p { margin: var(--spacing-xs) 0; font-size: 0.9rem; color: var(--text-secondary); }
+
+        .swipe-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: var(--spacing-md);
+        }
+
+        .swipe-btn {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; font-size: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-fast);
+            border: 2px solid var(--border-subtle);
+        }
+        .swipe-btn:hover { transform: scale(1.15); }
+
+        .dislike-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: var(--text-primary);
+            border-color: rgba(231,76,60,0.3);
+        }
+        .like-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: var(--text-primary);
+            border-color: rgba(46,204,113,0.3);
+        }
+
+        .back-button {
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            padding: 10px 24px;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: var(--spacing-md);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .back-button:hover {
+            background: var(--surface);
+            transform: translateY(-2px);
+            border-color: var(--text-muted);
+        }
+
+        .swipe-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2rem; font-weight: bold;
+            opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        .swipe-overlay.like {
+            background-color: rgba(46, 213, 115, 0.3);
+            color: #2ecc71;
+            border: 4px solid #2ecc71;
+            border-radius: var(--radius-md);
+        }
+        .swipe-overlay.dislike {
+            background-color: rgba(255, 71, 87, 0.3);
+            color: #e74c3c;
+            border: 4px solid #e74c3c;
+            border-radius: var(--radius-md);
+        }
+
+        .status-message {
+            background: var(--surface-glass);
+            backdrop-filter: blur(12px);
+            color: var(--text-primary);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            position: fixed; bottom: var(--spacing-md); left: 50%;
+            transform: translateX(-50%);
+            display: none; z-index: 1000; font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content { padding: 8px var(--spacing-sm); gap: var(--spacing-sm); flex-wrap: wrap; }
+            .nav-links { gap: var(--spacing-sm); }
+            .search-bar input { width: 140px; }
+            .search-bar input:focus { width: 180px; }
+            .train-link { padding: 6px 14px; font-size: 0.8rem; }
+            .card-container { width: 280px; height: 420px; }
+            .info h3 { font-size: 1.1rem; }
+            .info p { font-size: 0.85rem; }
+            .swipe-btn { width: 54px; height: 54px; font-size: 1.25rem; }
+            .swipe-overlay { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Shared header -->
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ url_for('home') }}" class="logo">MovieFlix</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('swipe') }}" class="nav-link active">Discover</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" name="q" placeholder="Search movies...">
+                <button onclick="searchMovies()" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+            <a href="{{ url_for('swipe') }}" class="train-link">🎬 Train Recommendations</a>
+            <a href="{{ url_for('logout') }}" class="nav-link" style="margin-left: 10px;">Logout</a>
+        </div>
+    </div>
+
+    <div class="swipe-container">
+        {% if movie %}
+        <div class="card-container">
+            <div class="movie-card" id="currentCard">
+                <div class="swipe-overlay like" id="likeOverlay">LIKE!</div>
+                <div class="swipe-overlay dislike" id="dislikeOverlay">NOPE!</div>
+                <img src="{{ movie.poster }}" alt="{{ movie.title }} Poster" class="poster" id="swipePoster" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+                <div class="info">
+                    <h3>{{ movie.title }}</h3>
+                    <p>({{ movie.year }})</p>
+                    <p>⭐ Rating: {{ movie.rating }}</p>
+                    <p>Genres: {{ movie.genres|join(', ') }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="swipe-buttons">
+            <div class="swipe-btn dislike-btn" id="dislikeBtn">✕</div>
+            <div class="swipe-btn like-btn" id="likeBtn">❤</div>
+        </div>
+        {% else %}
+        <div class="empty-state" style="text-align: center; padding: 20px; max-width: 400px; margin: 0 auto;">
+            <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin-bottom: 10px; color: var(--text-primary);">No Movies Available</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px;">
+                We couldn't fetch movies from the server right now. This is usually caused by a missing or invalid TMDB API Key. Please verify your system configuration!
+            </p>
+            <a href="{{ url_for('home') }}" class="back-button" style="margin-top: 0;">Back to Home</a>
+        </div>
+        {% endif %}
+        
+        {% if movie %}
+        <a href="{{ url_for('home') }}" class="back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+            Back to Home
+        </a>
+        {% endif %}
+    </div>
+    <div class="status-message" id="statusMessage"></div>
+
+    <script>
+        const card = document.getElementById('currentCard');
+        const likeBtn = document.getElementById('likeBtn');
+        const dislikeBtn = document.getElementById('dislikeBtn');
+        const likeOverlay = document.getElementById('likeOverlay');
+        const dislikeOverlay = document.getElementById('dislikeOverlay');
+        const statusMessage = document.getElementById('statusMessage');
+
+        let startX = 0, startY = 0;
+        let moveX = 0, moveY = 0;
+        let isDragging = false;
+        let currentRotation = 0;
+        let initialCardX = 0;
+        const swipeThreshold = 100;
+        let imdbId = '{{ movie.imdb_id }}';
+        let isProcessingSwipe = false;
+
+        function showStatus(message, isError = false) {
+            statusMessage.textContent = message;
+            statusMessage.style.display = 'block';
+            statusMessage.style.backgroundColor = isError ? 'rgba(255,0,0,0.8)' : 'rgba(0,0,0,0.8)';
+            setTimeout(() => { statusMessage.style.display = 'none'; }, 3000);
+        }
+
+        const cardRect = card.getBoundingClientRect();
+        initialCardX = cardRect.left;
+
+        card.addEventListener('touchstart', handleTouchStart);
+        card.addEventListener('touchmove', handleTouchMove);
+        card.addEventListener('touchend', handleTouchEnd);
+        card.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        likeBtn.addEventListener('click', () => handleSwipe('like'));
+        dislikeBtn.addEventListener('click', () => handleSwipe('dislike'));
+
+        function handleTouchStart(e) {
+            if (isProcessingSwipe) return;
+            startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+            isDragging = true; card.style.transition = 'none';
+        }
+        function handleTouchMove(e) {
+            if (!isDragging || isProcessingSwipe) return;
+            moveX = e.touches[0].clientX - startX; moveY = e.touches[0].clientY - startY;
+            updateCardPosition();
+        }
+        function handleTouchEnd() {
+            if (!isDragging || isProcessingSwipe) return;
+            isDragging = false;
+            if (Math.abs(moveX) > swipeThreshold) { handleSwipe(moveX > 0 ? 'like' : 'dislike'); }
+            else { resetCardPosition(); }
+        }
+        function handleMouseDown(e) {
+            if (isProcessingSwipe) return;
+            startX = e.clientX; startY = e.clientY;
+            isDragging = true; card.style.transition = 'none'; card.style.cursor = 'grabbing';
+        }
+        function handleMouseMove(e) {
+            if (!isDragging || isProcessingSwipe) return;
+            moveX = e.clientX - startX; moveY = e.clientY - startY;
+            updateCardPosition();
+        }
+        function handleMouseUp() {
+            if (!isDragging || isProcessingSwipe) return;
+            isDragging = false; card.style.cursor = 'grab';
+            if (Math.abs(moveX) > swipeThreshold) { handleSwipe(moveX > 0 ? 'like' : 'dislike'); }
+            else { resetCardPosition(); }
+        }
+        function updateCardPosition() {
+            const rotate = moveX * 0.1;
+            if (moveX > 50) { likeOverlay.style.opacity = Math.min(moveX / 100, 1); dislikeOverlay.style.opacity = 0; }
+            else if (moveX < -50) { dislikeOverlay.style.opacity = Math.min(Math.abs(moveX) / 100, 1); likeOverlay.style.opacity = 0; }
+            else { likeOverlay.style.opacity = 0; dislikeOverlay.style.opacity = 0; }
+            card.style.transform = `translateX(${moveX}px) translateY(${moveY}px) rotate(${rotate}deg)`;
+        }
+        function resetCardPosition() {
+            card.style.transition = 'transform 0.3s ease';
+            card.style.transform = 'translateX(0) translateY(0) rotate(0deg)';
+            likeOverlay.style.opacity = 0; dislikeOverlay.style.opacity = 0;
+        }
+        function handleSwipe(action) {
+            if (isProcessingSwipe) return;
+            isProcessingSwipe = true;
+            card.style.transition = 'transform 0.5s ease';
+            if (action === 'like') { card.classList.add('swiped-right'); likeOverlay.style.opacity = 1; }
+            else { card.classList.add('swiped-left'); dislikeOverlay.style.opacity = 1; }
+            fetch('/swipe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+                body: `imdb_id=${encodeURIComponent(imdbId)}&action=${action}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.movie) {
+                    setTimeout(() => {
+                        document.getElementById('swipePoster').src = data.movie.poster;
+                        document.querySelector('.info h3').textContent = data.movie.title;
+                        document.querySelectorAll('.info p')[0].textContent = `(${data.movie.year})`;
+                        document.querySelectorAll('.info p')[1].textContent = `⭐ Rating: ${data.movie.rating}`;
+                        document.querySelectorAll('.info p')[2].textContent = `Genres: ${data.movie.genres.join(', ')}`;
+                        card.classList.remove('swiped-right', 'swiped-left');
+                        resetCardPosition();
+                        imdbId = data.movie.imdb_id;
+                        isProcessingSwipe = false;
+                    }, 300);
+                } else { window.location.href = '/swipe'; }
+            })
+            .catch(error => { console.error('Fetch error:', error); window.location.href = '/swipe'; });
+        }
+
+        function searchMovies() {
+            const q = document.getElementById('searchInput').value.trim();
+            if (q) window.location.href = "{{ url_for('search') }}?q=" + encodeURIComponent(q);
+            return false;
+        }
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchMovies(); });
+    </script>
+</body>
+</html>

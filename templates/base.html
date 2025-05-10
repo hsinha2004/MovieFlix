@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieFlix — {% block title %}Home{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e63946;
+            --primary-hover: #ff4d5a;
+            --primary-glow: rgba(230, 57, 70, 0.25);
+            --accent: #f4a261;
+            --background: #0b0b14;
+            --surface: #14142b;
+            --surface-elevated: #1c1c3a;
+            --surface-glass: rgba(28, 28, 58, 0.8);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0bc;
+            --text-muted: #6b6b85;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --radius-xl: 32px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.35);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.45);
+            --shadow-glow: 0 0 30px var(--primary-glow);
+            --spacing-xs: 6px;
+            --spacing-sm: 12px;
+            --spacing-md: 20px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.2s var(--ease-out);
+            --transition-smooth: 0.4s var(--ease-out);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            margin: 0; padding: 0;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+        h1,h2,h3,h4,h5,h6 { font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: -0.02em; margin: 0; }
+
+        .header { background: var(--surface-glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border-subtle); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .header-content { max-width: 1440px; margin: 0 auto; padding: 10px var(--spacing-lg); display: flex; align-items: center; gap: var(--spacing-md); }
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; letter-spacing: -0.03em; flex-shrink: 0; }
+        .nav-links { display: flex; gap: var(--spacing-md); margin-right: auto; }
+        .nav-link { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color var(--transition-fast); }
+        .nav-link:hover { color: var(--text-primary); }
+
+        .search-bar { display: flex; align-items: center; gap: 8px; }
+        .search-bar input { padding: 8px 16px; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); background: var(--surface); color: var(--text-primary); font-size: 0.9rem; width: 220px; transition: var(--transition-fast); outline: none; }
+        .search-bar input::placeholder { color: var(--text-muted); }
+        .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+        .search-bar button { padding: 8px 12px; background: var(--primary); color: var(--text-primary); border: none; border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition-fast); display: flex; align-items: center; }
+        .search-bar button:hover { background: var(--primary-hover); }
+
+        main { margin-top: 64px; padding: var(--spacing-lg); max-width: 1440px; margin-left: auto; margin-right: auto; }
+
+        @media (max-width: 768px) {
+            .header-content { padding: 8px var(--spacing-sm); gap: var(--spacing-sm); flex-wrap: wrap; }
+            .search-bar input { width: 140px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ url_for('home') }}" class="logo">MovieFlix</a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('swipe') }}" class="nav-link">Discover</a>
+            </div>
+            <div class="search-bar">
+                <form action="{{ url_for('search') }}" method="get" style="display:flex;gap:8px;margin:0;">
+                    <input type="text" name="q" placeholder="Search movies..." value="{{ request.args.get('q', '') }}">
+                    <button type="submit" aria-label="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                </form>
+            </div>
+            <a href="{{ url_for('logout') }}" class="nav-link" style="margin-left: 10px;">Logout</a>
+        </div>
+    </div>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
